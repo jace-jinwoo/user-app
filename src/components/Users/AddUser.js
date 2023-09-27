@@ -10,13 +10,14 @@ const initialValue = {
 
 const AddUser = (props) => {
   const [entered, setEntered] = useState(initialValue);
+
   const addUserHandler = (e) => {
     e.preventDefault();
     if (entered.userName.trim().length === 0 || entered.age.trim().length === 0)
       return;
     if (entered.age < 1) return;
 
-    console.log(entered);
+    props.onAddUser(entered.userName, entered.age);
     setEntered(initialValue);
   };
 
