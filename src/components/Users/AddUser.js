@@ -11,12 +11,27 @@ const initialValue = {
 
 const AddUser = (props) => {
   const [entered, setEntered] = useState(initialValue);
+  const [error, setError] = useState();
 
   const addUserHandler = (e) => {
     e.preventDefault();
-    if (entered.userName.trim().length === 0 || entered.age.trim().length === 0)
+    if (
+      entered.userName.trim().length === 0 ||
+      entered.age.trim().length === 0
+    ) {
+      setError({
+        title: "Invalid input",
+        message: "Please enter a valid name and age (non-empty values).",
+      });
       return;
-    if (entered.age < 1) return;
+    }
+    if (+entered.age < 1) {
+      setError({
+        title: "Invalid age",
+        message: "Please enter a valid age (> 0).",
+      });
+      return;
+    }
 
     props.onAddUser(entered.userName, entered.age);
     setEntered(initialValue);
@@ -26,6 +41,10 @@ const AddUser = (props) => {
     const { id, value } = e.target;
 
     setEntered({ ...entered, [id]: value });
+  };
+
+  const errorHandler = () => {
+    setError(null);
   };
 
   return (
@@ -48,7 +67,13 @@ const AddUser = (props) => {
           <Button type="submit">Add User</Button>
         </form>
       </Card>
-      <ErrorModal title="An error occurred!" message="Something went wrong!" />
+      {error && (
+        <ErrorModal
+          title={error.title}
+          message={error.message}
+          onConfirm={errorHandler}
+        />
+      )}
     </>
   );
 };
