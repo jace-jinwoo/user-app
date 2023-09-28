@@ -3,6 +3,7 @@ import classes from "./AddUser.module.css";
 import Button from "../UI/Button";
 import { useState } from "react";
 import ErrorModal from "../UI/ErrorModal";
+import Modal from "../UI/Modal";
 
 const initialValue = {
   userName: "",
@@ -11,6 +12,7 @@ const initialValue = {
 
 const AddUser = (props) => {
   const [entered, setEntered] = useState(initialValue);
+  const [completed, setCompleted] = useState();
   const [error, setError] = useState();
 
   const addUserHandler = (e) => {
@@ -33,6 +35,10 @@ const AddUser = (props) => {
       return;
     }
 
+    setCompleted({
+      title: "Entered",
+      message: "Entered Correctly!",
+    });
     props.onAddUser(entered.userName, entered.age);
     setEntered(initialValue);
   };
@@ -43,6 +49,9 @@ const AddUser = (props) => {
     setEntered({ ...entered, [id]: value });
   };
 
+  const completedHandler = () => {
+    setCompleted(null);
+  };
   const errorHandler = () => {
     setError(null);
   };
@@ -67,6 +76,13 @@ const AddUser = (props) => {
           <Button type="submit">Add User</Button>
         </form>
       </Card>
+      {completed && (
+        <Modal
+          title={completed.title}
+          message={completed.message}
+          onConfirm={completedHandler}
+        />
+      )}
       {error && (
         <ErrorModal
           title={error.title}
