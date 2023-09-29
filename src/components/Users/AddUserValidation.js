@@ -1,94 +1,101 @@
 import Card from "../UI/Card";
 import classes from "./AddUser.module.css";
 import Button from "../UI/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import ErrorModal from "../UI/ErrorModal";
 import Modal from "../UI/Modal";
 
 const initialValue = {
-  userName: "",
-  userNameIsValid: false,
+  name: "",
+  nameIsValid: false,
   age: "",
   ageIsValid: false,
 };
 
+const userReducer = (state, action) => {
+  if (action.type === "NAME_INPUT") {
+    return {
+      ...state,
+      name: action.payload,
+      nameIsValid: action.payload.trim().length > 5,
+    };
+  }
+  if (action.type === "AGE_INPUT") {
+    return {
+      ...state,
+      age: action.payload,
+      ageIsValid: action.payload.trim().length > 0 && +action.payload > 0,
+    };
+  }
+
+  return initialValue;
+};
+
 const AddUserValidation = (props) => {
-  const [entered, setEntered] = useState(initialValue);
+  // const [userState, setEntered] = useStat(initialValue);
+  const [userState, dispatchUser] = useReducer(userReducer, initialValue);
   const [completed, setCompleted] = useState();
-  const [error, setError] = useState();
+  // const [error, setError] = useState();
 
   const addUserHandler = (e) => {
     e.preventDefault();
-    if (
-      entered.userName.trim().length === 0 ||
-      entered.age.trim().length === 0
-    ) {
-      setError({
-        title: "Invalid input",
-        message: "Please enter a valid name and age (non-empty values).",
-      });
-      return;
-    }
-    if (+entered.age < 1) {
-      setError({
-        title: "Invalid age",
-        message: "Please enter a valid age (> 0).",
-      });
-      return;
-    }
 
     setCompleted({
       title: "Entered",
       message: "Entered Correctly!",
     });
-    props.onAddUser(entered.userName, entered.age);
-    setEntered(initialValue);
+    props.onAddUser(userState.name, userState.age);
+    dispatchUser({ type: "" });
   };
 
   const changeHandler = (e) => {
     const { id, value } = e.target;
 
-    setEntered({ ...entered, [id]: value });
+    // setEntered({ ...userState, [id]: value });
+    let action = id === "name" ? "NAME_INPUT" : id === "age" ? "AGE_INPUT" : "";
+    dispatchUser({ type: action, payload: value });
   };
 
   const completedHandler = () => {
     setCompleted(null);
   };
-  const errorHandler = () => {
-    setError(null);
-  };
+  // const errorHandler = () => {
+  //   setError(null);
+  // };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log("setTimeout worked!");
-      setEntered((prevState) => ({
-        ...prevState,
-        userNameIsValid: entered.userName.trim().length > 5,
-        ageIsValid: entered.age.trim().length > 8,
-      }));
-    }, 500);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     console.log("setTimeout worked!");
+  //     dispatchUser({type: action, payload: value});
 
-    return () => clearTimeout(timer);
-  }, [entered.userName, entered.age]);
+  //     setEntered((prevState) => ({
+  //       ...prevState,
+  //       nameIsValid: userState.name.trim().length > 5,
+  //       ageIsValid: userState.age.trim().length > 8,
+  //     }));
+  //   }, 500);
+
+  //   return () => clearTimeout(timer);
+  // }, [userState.name, userState.age]);
 
   return (
     <>
       <Card className={classes.input}>
         <form onSubmit={addUserHandler}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="name">name</label>
           <input
-            id="userName"
-            value={entered.userName}
+            id="name"
+            value={userState.name}
             onChange={changeHandler}
-            className={entered.userNameIsValid ? "" : classes.invalid}
+            className={userState.nameIsValid ? "" : classes.invalid}
           />
           <label htmlFor="age">Age (Years)</label>
           <input
             id="age"
             type="number"
-            value={entered.age}
+            value={userState.age}
             onChange={changeHandler}
-            className={entered.ageIsValid ? "" : classes.invalid}
+            className={userState.ageIsValid ? "" : classes.invalid}
           />
           <Button type="submit">Add User</Button>
         </form>
@@ -100,13 +107,13 @@ const AddUserValidation = (props) => {
           onConfirm={completedHandler}
         />
       )}
-      {error && (
+      {/* {error && (
         <ErrorModal
           title={error.title}
           message={error.message}
           onConfirm={errorHandler}
         />
-      )}
+      )} */}
     </>
   );
 };
