@@ -24,3 +24,7 @@
   outline: none;
   border-color: #4f005f;
 }
+
+input.invalid {
+  border-color: #e51111;
+}

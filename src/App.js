@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AddUser from "./components/Users/AddUser";
 import UserList from "./components/Users/UserList";
+import AddUserValidation from "./components/Users/AddUserValidation";
 
 function App() {
   const [userList, setUserList] = useState([]);
@@ -16,7 +17,8 @@ function App() {
 
   return (
     <div>
-      <AddUser onAddUser={addUserHandler} />
+      <AddUserValidation onAddUser={addUserHandler} />
+      {/* <AddUser onAddUser={addUserHandler} /> */}
       <UserList users={userList} />
     </div>
   );
