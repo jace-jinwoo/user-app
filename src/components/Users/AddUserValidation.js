@@ -59,11 +59,16 @@ const AddUserValidation = (props) => {
   };
 
   useEffect(() => {
-    setEntered((prevState) => ({
-      ...prevState,
-      userNameIsValid: entered.userName.trim().length > 5,
-      ageIsValid: entered.age.trim().length > 8,
-    }));
+    const timer = setTimeout(() => {
+      console.log("setTimeout worked!");
+      setEntered((prevState) => ({
+        ...prevState,
+        userNameIsValid: entered.userName.trim().length > 5,
+        ageIsValid: entered.age.trim().length > 8,
+      }));
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [entered.userName, entered.age]);
 
   return (
