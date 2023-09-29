@@ -1,7 +1,7 @@
 import Card from "../UI/Card";
 import classes from "./AddUser.module.css";
 import Button from "../UI/Button";
-import { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import ErrorModal from "../UI/ErrorModal";
 import Modal from "../UI/Modal";
 import Input from "../UI/Input";
@@ -38,9 +38,14 @@ const AddUserValidation = (props) => {
   const [completed, setCompleted] = useState();
   // const [error, setError] = useState();
 
+  const nameRef = React.useRef();
+  const ageRef = React.useRef();
+
   const addUserHandler = (e) => {
     e.preventDefault();
 
+    if (userState.nameIsValid) {
+    }
     setCompleted({
       title: "Entered",
       message: "Entered Correctly!",
@@ -62,6 +67,10 @@ const AddUserValidation = (props) => {
   const completedHandler = () => {
     setCompleted(null);
   };
+
+  useEffect(() => {
+    nameRef.current.focus();
+  }, [nameRef]);
   // const errorHandler = () => {
   //   setError(null);
   // };
@@ -87,6 +96,7 @@ const AddUserValidation = (props) => {
         <form onSubmit={addUserHandler}>
           <Input
             id="name"
+            ref={nameRef}
             value={userState.name}
             className={userState.nameIsValid ? "" : classes.invalid}
             onChange={changeHandler}
@@ -94,6 +104,7 @@ const AddUserValidation = (props) => {
           />
           <Input
             id="age"
+            ref={ageRef}
             label="Age (Years)"
             type="number"
             value={userState.age}

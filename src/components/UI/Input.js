@@ -1,10 +1,30 @@
-import classes from "../Users/AddUser.module.css";
+import React, { useImperativeHandle, useRef } from "react";
 
-const Input = (props) => {
+const Input = React.forwardRef((props, ref) => {
+  const inputRef = useRef();
+
+  // const activate = () => {
+  //     ref.current.focus()
+  // }
+  const activate = () => {
+    inputRef.current.focus();
+  };
+  const inactivate = () => {
+    inputRef.current.blur();
+  };
+
+  useImperativeHandle(ref, () => {
+    return {
+      focus: activate,
+      blur: inactivate,
+    };
+  });
+
   return (
     <>
       <label htmlFor={props.id}>{props.label ?? props.id}</label>
       <input
+        ref={inputRef}
         id={props.id}
         type={props.type}
         value={props.value}
@@ -14,6 +34,6 @@ const Input = (props) => {
       />
     </>
   );
-};
+});
 
 export default Input;
