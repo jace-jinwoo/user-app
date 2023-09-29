@@ -4,6 +4,7 @@ import Button from "../UI/Button";
 import { useEffect, useReducer, useState } from "react";
 import ErrorModal from "../UI/ErrorModal";
 import Modal from "../UI/Modal";
+import Input from "../UI/Input";
 
 const initialValue = {
   name: "",
@@ -56,6 +57,8 @@ const AddUserValidation = (props) => {
     dispatchUser({ type: action, payload: value });
   };
 
+  const blurHandler = () => {};
+
   const completedHandler = () => {
     setCompleted(null);
   };
@@ -82,20 +85,21 @@ const AddUserValidation = (props) => {
     <>
       <Card className={classes.input}>
         <form onSubmit={addUserHandler}>
-          <label htmlFor="name">name</label>
-          <input
+          <Input
             id="name"
             value={userState.name}
-            onChange={changeHandler}
             className={userState.nameIsValid ? "" : classes.invalid}
+            onChange={changeHandler}
+            onBlur={blurHandler}
           />
-          <label htmlFor="age">Age (Years)</label>
-          <input
+          <Input
             id="age"
+            label="Age (Years)"
             type="number"
             value={userState.age}
-            onChange={changeHandler}
             className={userState.ageIsValid ? "" : classes.invalid}
+            onChange={changeHandler}
+            onBlur={blurHandler}
           />
           <Button type="submit">Add User</Button>
         </form>
